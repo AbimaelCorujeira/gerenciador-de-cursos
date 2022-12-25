@@ -6,8 +6,9 @@ public class Curso {
 
     private String nome;
     private String instrutor;
-    private List<Aula> aulas = new ArrayList<>();
+    private List<Aula> aulas = new LinkedList<>();
     private Set<Aluno> alunos = new HashSet<>();
+    private Map<Integer, Aluno> matriculaParaAluno = new HashMap<>();
 
     public Curso(String nome, String instrutor) {
         this.nome = nome;
@@ -34,14 +35,9 @@ public class Curso {
         return this.aulas.stream().mapToInt(Aula::getTempo).sum();
     }
 
-    @Override
-    public String toString() {
-        return "[Curso: " + nome + ", tempo total: " + getTempoTotal() + " , aulas: " +
-        this.aulas + "]";
-    }
-
     public void matricula(Aluno aluno) {
         this.alunos.add(aluno);
+        this.matriculaParaAluno.put(aluno.getNumeroMatricula(), aluno);
     }
 
     public Set<Aluno> getAlunos() {
@@ -51,5 +47,16 @@ public class Curso {
     public boolean estaMatriculado(Aluno aluno) {
         return this.alunos.contains(aluno);
     }
-}
 
+    public Aluno buscaMatriculado(int numero) {
+        if(!matriculaParaAluno.containsKey(numero))
+            throw new NoSuchElementException();
+        return matriculaParaAluno.get(numero);
+    }
+
+    @Override
+    public String toString() {
+        return "[Curso: " + nome + ", tempo total: " + getTempoTotal() + " , aulas: " +
+                this.aulas + "]";
+    }
+}
